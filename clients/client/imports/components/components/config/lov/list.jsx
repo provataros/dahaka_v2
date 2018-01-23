@@ -9,6 +9,10 @@ import { Redirect } from 'react-router-dom';
 
 import {LOV} from "/imports/collections";
 
+import Button from "material-ui/Button";
+import { Link } from 'react-router-dom';
+
+
 
 
 var item_style = {
@@ -25,7 +29,6 @@ var item_style = {
 class ListLovs extends React.Component {
     constructor(props){
         super(props);
-        this.goToDetails = this.goToDetails.bind(this);
         this.state = {
             items : []
         }
@@ -36,22 +39,23 @@ class ListLovs extends React.Component {
             items : props.result
         })
     }
-    goToDetails(id){
-        //this.state.target = id;
-        //this.setState(this.state);
-        this.props.history.push("/configuration/lov/"+id);
-    }
     render() {
         var that = this;
         var items = this.state.items.map(function(d,i){
             return (
-                <div style={item_style} key={"."+i} onClick={function(){that.goToDetails(d._id)}}>{d.name.content}</div>
+                <Button key={"."+i} style={{textTransform : "none",marginRight : "15px"}} raised color="primary" component={Link} to = {"/configuration/lov/"+d._id}>
+                    {d.name.content}
+                </Button>
             )
         });
         return (
             <div>
                 <h1>Lists of Values</h1>
-                <div onClick={function(){that.props.history.push("/configuration/new_lov")}}>New...</div>
+                <Button style={{textTransform : "none"}} raised color="secondary" component={Link} to = "/configuration/new_lov">
+                    New
+                </Button>
+                <br/>
+                <br/>
                 {items}
             </div>
         )

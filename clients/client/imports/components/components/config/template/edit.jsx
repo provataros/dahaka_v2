@@ -3,6 +3,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import {LOV,Templates} from "/imports/collections";
+import Button from 'material-ui/Button';
+
 
 var section_header_style = {
     minWidth : "300px",
@@ -168,7 +170,7 @@ class Template extends React.Component {
                                         <div key = {"."+ii}>
                                             {that.getItem(dd,i,ii)}
                                             
-                                            <span onClick={function(){that.addItem(i,ii)}}>Add Item...</span>
+                                            <Button raised color="primary" onClick = {function(){that.addItem(i,ii)}}>Add Item</Button>
                                             <br />
                                             <br />
                                         </div>
@@ -177,17 +179,20 @@ class Template extends React.Component {
                             }
                         </div>
                     }
-                    <h4 onClick = {function(){that.addRow(i)}}>Add Row...</h4>
+                    <Button raised color="primary" onClick = {function(){that.addRow(i)}}>Add Row</Button>
                     <br/>
                     <br/>
                 </div>
             )
         });
+        console.log("render?");
         return (
             <div>
-                <h2 onClick = {this.saveTemplate} style={{cursor : "pointer"}}>Save</h2>
+                <Button raised color="secondary" onClick = {this.saveTemplate}>
+                    Save
+                </Button>
                 <h1>Client Template</h1>
-                <h3 onClick={this.addSection}>Add Section...</h3>
+                <Button raised color="primary" onClick = {this.addSection}>Add Section</Button>
                 <br/>
                 <br/>
                 <br/>

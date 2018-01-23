@@ -5,6 +5,7 @@ console.log(f);
 var Tempaltes = {}
 var Views = {}
 var Components = {}
+var App = null;
 
 if (!f){
     import Dashboard from "./components/dashboard.jsx";
@@ -21,8 +22,8 @@ if (!f){
     import Lovs from "./components/config/lov/list.jsx";
     import Template from "./components/config/template/edit.jsx";
     import NewClient from "./components/config/template/new.jsx";
+    import Root from "./components/app.jsx"
 
-    
 
     Templates = {
         Client : {
@@ -51,7 +52,7 @@ if (!f){
         TogglableButtonList : TogglableButtonList,
         RadioButton : RadioButton
     }
-
+    App = Root
     f = true;
 }
 export const Templates = Templates;
@@ -59,5 +60,7 @@ export const Templates = Templates;
 export const Views = Views
 
 export const Elements = Elements
+
+export const App = App
 
 

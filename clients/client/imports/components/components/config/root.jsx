@@ -1,20 +1,22 @@
 import React from 'react';
 
 import { Link } from 'react-router-dom';
+import Button from 'material-ui/Button';
 
 export default class Configuration extends React.Component {
   render() {
     return (
       <div>
         <h1>Configuration</h1>
-        <Link to = "/configuration/lovs">
+        
+        <Button style={{textTransform : "none"}} raised color="primary" component={Link} to = "/configuration/lovs">
           Lists of Values
-        </Link>
+        </Button>
         <br />
         <br />
-        <Link to = "/configuration/template">
-          Client Template
-        </Link>
+        <Button style={{textTransform : "none"}} raised color="primary" component={Link} to = "/configuration/template">
+            Client Template
+        </Button>
       </div>
     );
   }
