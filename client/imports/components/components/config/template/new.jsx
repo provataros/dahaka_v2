@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import {LOV,Templates} from "/imports/collections";
 
+import Button from "material-ui/Button";
+
 var section_header_style = {
     border : "none",
     fontSize : "28px",
@@ -42,7 +44,7 @@ class Template extends React.Component {
         
         this.handleFieldType = this.handleFieldType.bind(this);
         this.handleFieldValues = this.handleFieldValues.bind(this);
-        this.saveTemplate = this.saveTemplate.bind(this);
+        this.saveData = this.saveData.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleSectionName = this.handleSectionName.bind(this);
 
@@ -52,39 +54,6 @@ class Template extends React.Component {
             sections : [
             ]
         }
-    }
-    addSection(){
-        this.state.sections.push({
-            rows : [],
-            name : {
-                content : "",
-                value : "",
-            }
-        });
-        this.setState(this.state.sections);
-    }
-    addItem(x,xx){
-        this.state.sections[x].rows[xx].items.push({
-            type : "text",
-            name : {
-                content : "",
-                value : ""
-            }
-        });
-        this.setState(this.state.sections);
-    }
-    addRow(i){
-        var f = {
-            items : []
-        }
-        this.state.sections[i].rows.push(f);
-        this.setState(this.state.sections);
-    }
-    saveTemplate(){
-        console.log(this.state.sections);
-        Meteor.call("saveTemplate",this.state.sections,function(err,res){
-            console.log(err,res);
-        });
     }
     componentWillReceiveProps(props){
         if (!props.ready){return;}
@@ -99,65 +68,40 @@ class Template extends React.Component {
         this.setState(f);
     }
     handleFieldType(x,xx,xxx,v){
-        this.state.sections[x].rows[xx].items[xxx].type = v
-        if (v=="text" || v=="checkbox"){
-            delete this.state.sections[x].rows[xx].items[xxx].values; 
-        }
-        this.setState(this.state.sections);
+        console.log(x.nativeEvent.target.value);
     }
-    handleSectionName(i,v){
-        this.state.sections[i].name = {
-            content : v,
-            value : v.toCamelCase()
-        }
-        this.setState(this.state.sections);
+    handleSectionName(x){
+        console.log(x.nativeEvent.target.value);
     }
     handleNameChange(x,xx,xxx,v){
-        var f = {
-            value : v.toCamelCase(),
-            content : v
-        }
-        this.state.sections[x].rows[xx].items[xxx].name = f
-
-        this.setState(this.state.sections);
+        console.log(x.nativeEvent.target.value);
     }
     handleFieldValues(x,xx,xxx,v){
-        this.state.sections[x].rows[xx].items[xxx].values = v
-        this.setState(this.state.sections);
+        console.log(x.nativeEvent.target.value);
     }
     getValues(v){
         return this.state.values[v];
+    }
+    saveData(v){
+        console.log(this.state);
     }
     getItem(e,x,xx){
         var that = this;
         return e.items.map(function(d,i){
             var key = "."+i;
-            var values = null;
-            if (d.type == "radio" || d.type == "dropdown"){
-                values = (
-                    <select value={d.values} onChange={function(e){that.handleFieldValues(x,xx,i,e.target.value)}}>
-                        <option value=""/>
-                        {
-                            that.props.values.map(function(d,i){
-                                return (<option key={"."+i} value={d._id}>{d.name.content}</option>)
-                            })
-                        }
-                    </select>
-                )
-            }
             var type = d.type;
             var element = null;
             if (type=="text"){
-                element = (<input type="text" name={d.name.value}/>)
+                element = (<input type="text" name={d.name.value}  onChange={that.handleFieldValues}/>)
             }
             else if (type=="checkbox"){
-                element = (<input type="checkbox" name={d.name.value} id={d.name.value}/>)
+                element = (<input type="checkbox" name={d.name.value} id={d.name.value}  onChange={that.handleFieldValues}/>)
             }
             else if (type=="dropdown" || type == "radio"){
                 var vals = that.getValues(d.values);
                 if (type=="dropdown"){
                     element = (
-                        <select name={d.name.value}>
+                        <select name={d.name.value} onChange={that.handleFieldValues}>
                             {
                                 vals.items.map(function(d,i){
                                     return (<option key={"."+i} value={d.value}>{d.content}</option>)
@@ -174,7 +118,7 @@ class Template extends React.Component {
                                 return (
                                     <span key={"."+i}>
                                         <label htmlFor={dd.value}>{dd.content}</label>
-                                        <input id={dd.value} type="radio" name={d.name.value} key={"."+i} value={dd.value}/>
+                                        <input id={dd.value} type="radio" name={d.name.value} key={"."+i} value={dd.value}  onChange={that.handleFieldValues}/>
                                     </span>
                                 )
                                 
@@ -218,9 +162,14 @@ class Template extends React.Component {
             )
         });
         return (
-            <div>
+            <React.Fragment>
+                <Button raised color="secondary" onClick={this.saveData}>   
+                    Save
+                </Button>
+                <br/>
+                <br/>         
                 {sections}
-            </div>
+            </React.Fragment>
         );
     }
 }

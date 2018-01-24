@@ -1,18 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import Button from "material-ui/Button"
+
 export default class Dashboard extends React.Component {
   render() {
     return (
-      <div>
-        <Link to="/newclient">
+      <React.Fragment>
+        <Button raised color="primary" component={Link} to="/newclient">
           Create Client
-        </Link>
+        </Button>
         <br />
-        <Link to="/configuration">
-          Configuration
-        </Link>
-      </div>
+        <br />
+        <Button raised color="primary" component={Link} to="/configuration">
+        Configuration
+        </Button>
+      </React.Fragment>
     );
   }
 }

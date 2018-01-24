@@ -94,15 +94,19 @@ export default class App extends React.Component{
     }
     render(){
         return (
-            <div>
+            <React.Fragment>
                 <AppBar position="static">
                     <IconButton color="default" onClick={this.toggleSidePanel}>
                         <MenuIcon/>
                     </IconButton>
                 </AppBar>
-                <SidePanel open={this.state.panel} onClose={this.close}>{this.props.children}</SidePanel>
-                {this.props.children}
-            </div>
+                <SidePanel open={this.state.panel} onClose={this.close}>
+                    {this.props.children}
+                </SidePanel>
+                <div style={{padding : "25px"}}>
+                    {this.props.children}
+                </div>
+            </React.Fragment>
         )
     }
 }

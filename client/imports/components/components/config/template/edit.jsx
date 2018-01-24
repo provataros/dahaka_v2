@@ -5,6 +5,9 @@ import { withTracker } from 'meteor/react-meteor-data';
 import {LOV,Templates} from "/imports/collections";
 import Button from 'material-ui/Button';
 
+import Paper from 'material-ui/Paper';
+
+import AddIcon from "material-ui-icons/Add";
 
 var section_header_style = {
     minWidth : "300px",
@@ -21,7 +24,10 @@ var add_button_style = {
     cursor : "pointer"
 }
 var field_style = {
-    marginRight : "25px"
+    marginRight : "25px",
+    display : "inline-block",
+    marginBottom : "10px",
+    padding : "15px"
 }
 var field_name_style = {
     minWidth : "75px",
@@ -88,7 +94,7 @@ class Template extends React.Component {
     componentWillReceiveProps(props){
         if (!props.ready){return;}
         var f = {
-            sections : props.state.state,
+            sections : props.state?props.state.state:[],
             values : props.values
         }
         this.setState(f);
@@ -140,7 +146,7 @@ class Template extends React.Component {
             }
             var type = d.type;
             return (
-                <span key={key} style={field_style}>
+                <Paper elevation={3} key={key} style={field_style}>
                     <input type="text" style={field_name_style} placeholder="Field Name" defaultValue = {d.name.content} onChange={function(e){that.handleNameChange(x,xx,i,e.target.value)}}/>
                     <select style={margin_right_style} value={type} onChange={function(e){that.handleFieldType(x,xx,i,e.target.value)}}>
                         <option value="text">Text</option>
@@ -149,7 +155,7 @@ class Template extends React.Component {
                         <option value="checkbox">Checkbox</option>
                     </select>
                     {values}
-                </span>
+                </Paper>
             )
         })
     }
@@ -157,7 +163,7 @@ class Template extends React.Component {
         var that = this;
         var sections = this.state.sections.map(function(d,i){
             return (
-                <div key={"."+i}>
+                <Paper key={"."+i} elevation={2} style={{padding : "10px"}}>
                     <input placeholder="Section Title" type="text" style={section_header_style} defaultValue={d.name.content} onChange = {function(e){that.handleSectionName(i,e.target.value)}}/>
                     <br/>
                     <br/>
@@ -167,12 +173,12 @@ class Template extends React.Component {
                             { 
                                 d.rows.map(function(dd,ii){
                                     return (
-                                        <div key = {"."+ii}>
+                                        <div key = {"."+ii} style={{marginBottom : "15px"}}>
+                                            <Button fab mini raised color="primary" onClick = {function(){that.addItem(i,ii)}}   style={{marginRight : "15px",marginBottom : "15px"}}>
+                                                <AddIcon/>
+                                            </Button>
+                                            <br/>
                                             {that.getItem(dd,i,ii)}
-                                            
-                                            <Button raised color="primary" onClick = {function(){that.addItem(i,ii)}}>Add Item</Button>
-                                            <br />
-                                            <br />
                                         </div>
                                     )
                                 })
@@ -182,12 +188,11 @@ class Template extends React.Component {
                     <Button raised color="primary" onClick = {function(){that.addRow(i)}}>Add Row</Button>
                     <br/>
                     <br/>
-                </div>
+                </Paper>
             )
         });
-        console.log("render?");
         return (
-            <div>
+            <React.Fragment>
                 <Button raised color="secondary" onClick = {this.saveTemplate}>
                     Save
                 </Button>
@@ -197,7 +202,7 @@ class Template extends React.Component {
                 <br/>
                 <br/>
                 {sections}
-            </div>
+            </React.Fragment>
         );
     }
 }

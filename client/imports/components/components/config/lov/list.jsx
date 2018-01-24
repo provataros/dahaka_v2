@@ -13,6 +13,10 @@ import Button from "material-ui/Button";
 import { Link } from 'react-router-dom';
 
 
+import AddIcon from "material-ui-icons/Add";
+
+
+import theme from "/client/imports/themes/default"
 
 
 var item_style = {
@@ -51,8 +55,8 @@ class ListLovs extends React.Component {
         return (
             <div>
                 <h1>Lists of Values</h1>
-                <Button style={{textTransform : "none"}} raised color="secondary" component={Link} to = "/configuration/new_lov">
-                    New
+                <Button fab style={{textTransform : "none",position : "absolute", bottom : theme.spacing.unit * 2,right : theme.spacing.unit * 2}} raised color="secondary" component={Link} to = "/configuration/new_lov">
+                    <AddIcon/>
                 </Button>
                 <br/>
                 <br/>
