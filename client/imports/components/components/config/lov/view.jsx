@@ -10,6 +10,13 @@ import { Redirect } from 'react-router-dom';
 
 import {LOV} from "/imports/collections";
 
+
+import TextField from "material-ui/TextField"
+import Button from "material-ui/Button"
+import IconButton from "material-ui/IconButton"
+import AddIcon from "material-ui-icons/Add"
+
+
 String.prototype.toCamelCase = function() {
     return this
         .replace(/\s(.)/g, function($1) { return $1.toUpperCase(); })
@@ -34,6 +41,13 @@ var input_style = {
     padding : "5px",
     boxSizing : "border-box",
     fontSize : "20px",
+    width : "100%"
+}
+var header_style = {
+    marginTop  : "5px",
+    padding : "5px",
+    boxSizing : "border-box",
+    fontSize : "26px",
     width : "100%"
 }
 var parent_style = {
@@ -66,13 +80,8 @@ class NewLov extends React.Component {
         this.state = {
             items : []
         }
-
-        var f = LOV.find({}).count();
-        console.log(f);
-        console.log(props);
     }
     componentWillReceiveProps(props){
-        console.log(props);
         this.state.items = props.result.items;
         this.state.name = props.result.name;
         this.state.id = props.result._id;
@@ -83,7 +92,7 @@ class NewLov extends React.Component {
     }
     save(){
         var that = this;
-        console.log(this.state);
+        if (this.state.items.length!=0 && !this.state.items[this.state.items.length-1].value)return;
         Meteor.call("saveLov",this.state,true,function(err,res){
             if (err)alert("Error");
             else{
@@ -95,8 +104,7 @@ class NewLov extends React.Component {
         })
     }
     addItem(){
-        console.log(this.state);
-        if (this.state.items.length!=0 && !this.state.items[this.state.items.length-1])return;
+        if (this.state.items.length!=0 && !this.state.items[this.state.items.length-1].value)return;
         var f = {};
         this.state.last = f
         this.state.items.push(f);
@@ -122,23 +130,22 @@ class NewLov extends React.Component {
             console.log(d,i);
             return (
                 <div key={"."+(i)}>
-                    <input value = {d.content?d.content:""} placeholder="Enter a value" style={input_style}  type="text" onChange={function(e){that.handleChange(i,e.target.value)}}/>
+                    <TextField fullWidth defaultValue = {d.content?d.content:""} placeholder="Enter a value" style={input_style} onChange={function(e){that.handleChange(i,e.target.value)}}/>
                 </div>
             )
         })
         return (
             <div style={{textAlign : "center"}}>
                 <div style={parent_style}>
-                <input placeholder="List of Values Name" style={input_style}  type="text" onChange={this.changeName} value={this.state.name?this.state.name.content:""}/>
-                    <h3>Values</h3>
-                    <div style={button_style} onClick = {this.addItem}>Add</div>
-                    <br/>
-                    {items}
-                    <br/>
-                    <br/>
-                    <div style={save_button} onClick={this.save}>
+                    <TextField fullWidth placeholder="List of Values Name" InputProps={{style : {fontSize : "26px"}}}  onChange={this.changeName} value={this.state.name?this.state.name.content:""}/>
+                        <h3>Values</h3>
+                        {items}
+                        <br/>
+                        <div style={{textAlign : "right"}}><Button mini fab raised color="secondary" onClick = {this.addItem}><AddIcon/></Button></div>
+                        <br/>
+                    <Button fullWidth raised color="primary" onClick={this.save}>
                         Save
-                    </div>
+                    </Button>
                 </div>
             </div>
         );
@@ -147,13 +154,12 @@ class NewLov extends React.Component {
 
 
 export default ListPageContainer = withTracker((props) => {
-    console.log(props.match.params.id);
     
     const handle = Meteor.subscribe('LOV',props.match.params.id);
     
     return {
         ready : handle.ready(),
-        result : LOV.findOne({})
+        result : LOV.findOne({_id : props.match.params.id})
     };
 })(NewLov);
 

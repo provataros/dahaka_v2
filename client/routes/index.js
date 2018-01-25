@@ -10,6 +10,7 @@ export default class Routes extends React.Component {
                 <Switch>
                     <Route exact path="/"  component={Views.Dashboard}/>
                     <Route exact path="/newclient" component={ Views.Client.New } />
+                    <Route exact path="/clients/:id" component={ Views.Client.View } />
                     <Route exact path="/configuration" component={ Views.Configuration } />
                     <Route exact path="/configuration/new_lov" component={ Views.NewLov } />
                     <Route exact path="/configuration/lov/:id" component={ Views.ViewLov } />

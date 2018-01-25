@@ -6,6 +6,9 @@ import {LOV,Templates} from "/imports/collections";
 import Button from 'material-ui/Button';
 
 import Paper from 'material-ui/Paper';
+import TextField from 'material-ui/TextField';
+import Select from 'material-ui/Select';
+import {MenuItem} from 'material-ui/Menu';
 
 import AddIcon from "material-ui-icons/Add";
 
@@ -27,7 +30,8 @@ var field_style = {
     marginRight : "25px",
     display : "inline-block",
     marginBottom : "10px",
-    padding : "15px"
+    padding : "15px",
+    verticalAlign : "middle"
 }
 var field_name_style = {
     minWidth : "75px",
@@ -53,9 +57,13 @@ class Template extends React.Component {
         this.saveTemplate = this.saveTemplate.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleSectionName = this.handleSectionName.bind(this);
+        this.resetTemplate = this.resetTemplate.bind(this);
         this.state = {
             sections : [
-            ]
+            ],
+            registry : {
+
+            }
         }
     }
     addSection(){
@@ -66,7 +74,7 @@ class Template extends React.Component {
                 value : "",
             }
         });
-        this.setState(this.state.sections);
+        this.setState(this.state);
     }
     addItem(x,xx){
         this.state.sections[x].rows[xx].items.push({
@@ -76,56 +84,67 @@ class Template extends React.Component {
                 value : ""
             }
         });
-        this.setState(this.state.sections);
+        this.setState(this.state);
     }
     addRow(i){
         var f = {
             items : []
         }
         this.state.sections[i].rows.push(f);
-        this.setState(this.state.sections);
+        this.setState(this.state);
     }
     saveTemplate(){
-        console.log(this.state.sections);
         Meteor.call("saveTemplate",this.state.sections,function(err,res){
             console.log(err,res);
         });
     }
     componentWillReceiveProps(props){
         if (!props.ready){return;}
+        var s = props.initialState?props.initialState.state:[]
         var f = {
-            sections : props.state?props.state.state:[],
-            values : props.values
+            sections : JSON.parse(JSON.stringify(s)),
+            values : JSON.parse(JSON.stringify(props.values))
         }
         this.setState(f);
-        console.log(f);
     }
     handleFieldType(x,xx,xxx,v){
         this.state.sections[x].rows[xx].items[xxx].type = v
         if (v=="text" || v=="checkbox"){
             delete this.state.sections[x].rows[xx].items[xxx].values; 
         }
-        this.setState(this.state.sections);
+        this.setState(this.state);
     }
     handleSectionName(i,v){
         this.state.sections[i].name = {
             content : v,
             value : v.toCamelCase()
         }
-        this.setState(this.state.sections);
+        this.setState(this.state);
+    }
+    resetTemplate(){
+        this.state.sections =  JSON.parse(JSON.stringify(this.props.initialState.state));
+        this.setState(this.state)
     }
     handleNameChange(x,xx,xxx,v){
         var f = {
             value : v.toCamelCase(),
             content : v
         }
+        var that = this;
+        Object.keys(this.state.registry).map(function(d){
+            var key = x+"."+xx+"."+xxx;
+            if (d==key)return true;
+            if (that.state.registry[d] == f.value){
+                f.unique=false;
+            }
+        })
         this.state.sections[x].rows[xx].items[xxx].name = f
-
-        this.setState(this.state.sections);
+        this.state.registry[x+"."+xx+"."+xxx] = f.value;
+        this.setState(this.state);
     }
     handleFieldValues(x,xx,xxx,v){
         this.state.sections[x].rows[xx].items[xxx].values = v
-        this.setState(this.state.sections);
+        this.setState(this.state);
     }
     getItem(e,x,xx){
         var that = this;
@@ -134,37 +153,38 @@ class Template extends React.Component {
             var values = null;
             if (d.type == "radio" || d.type == "dropdown"){
                 values = (
-                    <select value={d.values} onChange={function(e){that.handleFieldValues(x,xx,i,e.target.value)}}>
-                        <option value=""/>
+                    <Select required style={{verticalAlign:"bottom"}} value={d.values?d.values:""} displayEmpty={true} onChange={function(e){that.handleFieldValues(x,xx,i,e.target.value)}}>
+                        <MenuItem value={""}>Values?</MenuItem>
                         {
                             that.props.values.map(function(d,i){
-                                return (<option key={"."+i} value={d._id}>{d.name.content}</option>)
+                                return (<MenuItem key={"."+i} value={d._id}>{d.name.content}</MenuItem>)
                             })
                         }
-                    </select>
+                    </Select>
                 )
             }
             var type = d.type;
             return (
                 <Paper elevation={3} key={key} style={field_style}>
-                    <input type="text" style={field_name_style} placeholder="Field Name" defaultValue = {d.name.content} onChange={function(e){that.handleNameChange(x,xx,i,e.target.value)}}/>
-                    <select style={margin_right_style} value={type} onChange={function(e){that.handleFieldType(x,xx,i,e.target.value)}}>
-                        <option value="text">Text</option>
-                        <option value="dropdown">Dropdown</option>
-                        <option value="radio">Radio</option>
-                        <option value="checkbox">Checkbox</option>
-                    </select>
+                    <TextField InputProps={{style : {color : d.name.unique==false?"red":"inherit"}}} required placeholder="Field Name" value = {d.name.content} onChange={function(e){that.handleNameChange(x,xx,i,e.target.value)}}/>
+                    <Select value={type} onChange={function(e){that.handleFieldType(x,xx,i,e.target.value)}}>
+                        <MenuItem value="text">Text</MenuItem>
+                        <MenuItem value="dropdown">Dropdown</MenuItem>
+                        <MenuItem value="radio">Radio</MenuItem>
+                        <MenuItem value="checkbox">Checkbox</MenuItem>
+                    </Select>
                     {values}
                 </Paper>
             )
         })
     }
+    
     render() {
         var that = this;
         var sections = this.state.sections.map(function(d,i){
             return (
-                <Paper key={"."+i} elevation={2} style={{padding : "10px"}}>
-                    <input placeholder="Section Title" type="text" style={section_header_style} defaultValue={d.name.content} onChange = {function(e){that.handleSectionName(i,e.target.value)}}/>
+                <Paper key={"."+i} elevation={4} style={{padding : "25px",marginBottom : "25px"}}>
+                    <TextField fullWidth placeholder="Section Title" type="text" value={d.name.content} onChange = {function(e){that.handleSectionName(i,e.target.value)}}/>
                     <br/>
                     <br/>
                     {
@@ -173,12 +193,11 @@ class Template extends React.Component {
                             { 
                                 d.rows.map(function(dd,ii){
                                     return (
-                                        <div key = {"."+ii} style={{marginBottom : "15px"}}>
-                                            <Button fab mini raised color="primary" onClick = {function(){that.addItem(i,ii)}}   style={{marginRight : "15px",marginBottom : "15px"}}>
+                                        <div key = {"."+ii} style={{marginBottom : "25px"}}>
+                                            {that.getItem(dd,i,ii)}
+                                            <Button fab mini raised color="primary" onClick = {function(){that.addItem(i,ii)}}   style={{marginBottom : "15px",verticalAlign : "middle"}}>
                                                 <AddIcon/>
                                             </Button>
-                                            <br/>
-                                            {that.getItem(dd,i,ii)}
                                         </div>
                                     )
                                 })
@@ -197,11 +216,16 @@ class Template extends React.Component {
                     Save
                 </Button>
                 <h1>Client Template</h1>
-                <Button raised color="primary" onClick = {this.addSection}>Add Section</Button>
+                &nbsp;
+                <Button raised color="primary" onClick = {this.resetTemplate}>Reset</Button>
                 <br/>
                 <br/>
                 <br/>
                 {sections}
+                <Button raised color="primary" onClick = {this.addSection}>Add Section</Button>
+                <br/>
+                <br/>
+                <br/>
             </React.Fragment>
         );
     }
@@ -215,6 +239,6 @@ export default Wrapper = withTracker((props) => {
     return {
         ready : handle1.ready() && handle2.ready(),
         values : LOV.find({},{fields: {'name':1}}).fetch(),
-        state : Templates.findOne({})
+        initialState : Templates.findOne({})
     };
 })(Template);

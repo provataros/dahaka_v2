@@ -7,6 +7,10 @@ import {Mongo} from "meteor/mongo";
 
 import { Redirect } from 'react-router-dom';
 
+import TextField from "material-ui/TextField"
+import Button from "material-ui/Button"
+import IconButton from "material-ui/IconButton"
+import AddIcon from "material-ui-icons/Add"
 
 String.prototype.toCamelCase = function() {
     return this
@@ -70,6 +74,7 @@ export default class NewLov extends React.Component {
     }
     save(){
         var that = this;
+        if (this.state.items.length!=0 && !this.state.items[this.state.items.length-1].value)return;
         Meteor.call("saveLov",this.state,function(err,res){
             if (err)alert("Error");
             else{
@@ -106,7 +111,7 @@ export default class NewLov extends React.Component {
         var items = this.state.items.map(function(d,i){
             return (
                 <div key={"."+(i)}>
-                    <input placeholder="Enter a value" style={input_style}  type="text" onChange={function(e){that.handleChange(i,e.target.value)}}/>
+                    <TextField fullWidth placeholder="Enter a value" style={input_style} onChange={function(e){that.handleChange(i,e.target.value)}}/>
                 </div>
             )
         })
@@ -114,16 +119,15 @@ export default class NewLov extends React.Component {
             <div style={{textAlign : "center"}}>
                 {this.state.id?(<Redirect to={"/configuration/lov/"+this.state.id} id={this.state.id}/>):null}
                 <div style={parent_style}>
-                <input placeholder="List of Values Name" style={input_style}  type="text" onChange={this.changeName}/>
-                    <h3>Values</h3>
-                    <div style={button_style} onClick = {this.addItem}>Add</div>
-                    <br/>
-                    {items}
-                    <br/>
-                    <br/>
-                    <div style={save_button} onClick={this.save}>
+                    <TextField fullWidth placeholder="List of Values Name" style={input_style} onChange={this.changeName}/>
+                        <h3>Values</h3>
+                        {items}
+                        <br/>
+                        <div style={{textAlign : "right"}}><Button mini fab raised color="secondary" onClick = {this.addItem}><AddIcon/></Button></div>
+                        <br/>
+                    <Button fullWidth raised color="primary" onClick={this.save}>
                         Save
-                    </div>
+                    </Button>
                 </div>
             </div>
         );

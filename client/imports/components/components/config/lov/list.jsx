@@ -48,7 +48,7 @@ class ListLovs extends React.Component {
         var items = this.state.items.map(function(d,i){
             return (
                 <Button key={"."+i} style={{textTransform : "none",marginRight : "15px"}} raised color="primary" component={Link} to = {"/configuration/lov/"+d._id}>
-                    {d.name.content}
+                    {d.name?d.name.content:""}
                 </Button>
             )
         });

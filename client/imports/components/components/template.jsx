@@ -14,8 +14,11 @@ import IconButton  from "material-ui/IconButton"
 import AppBar  from "material-ui/AppBar"
 import MenuIcon from "material-ui-icons/Menu"
 
+import Toolbar from "material-ui/Toolbar"
+
 import InboxIcon from 'material-ui-icons/Inbox';
 import DraftsIcon from 'material-ui-icons/Drafts';
+import BackSpace from 'material-ui-icons/KeyboardBackspace';
 import SettingsIcon from 'material-ui-icons/Settings';
 import HomeIcon from 'material-ui-icons/Home';
 import Divider from 'material-ui/Divider';
@@ -33,10 +36,14 @@ class SidePanel extends React.Component{
         this.state  = {
         }
         this.handleClick = this.handleClick.bind(this);
+        this.goBack = this.goBack.bind(this);
     }
     handleClick(){
         this.state.open = !this.state.open;
         this.setState(this.state);
+    }
+    goBack(){
+        console.log(this.props);
     }
     render(){
         return (
@@ -95,10 +102,13 @@ export default class App extends React.Component{
     render(){
         return (
             <React.Fragment>
-                <AppBar position="static">
-                    <IconButton color="default" onClick={this.toggleSidePanel}>
-                        <MenuIcon/>
-                    </IconButton>
+                <AppBar position="static" style={{flexFlow : "row"}}>
+                        <IconButton style={{color : "white"}} component="span" color="default" onClick={this.toggleSidePanel}>
+                            <MenuIcon/>
+                        </IconButton>
+                        <IconButton style={{color : "white"}} component="span" color="default" onClick={this.goBack}>
+                            <BackSpace/>
+                        </IconButton>
                 </AppBar>
                 <SidePanel open={this.state.panel} onClose={this.close}>
                     {this.props.children}

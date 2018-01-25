@@ -22,6 +22,7 @@ if (!f){
     import Lovs from "./components/config/lov/list.jsx";
     import Template from "./components/config/template/edit.jsx";
     import NewClient from "./components/config/template/new.jsx";
+    import ViewClient from "./components/config/template/view.jsx";
     import Root from "./components/app.jsx"
 
 
@@ -43,7 +44,8 @@ if (!f){
         Lovs : Lovs,
         Template : Template,
         Client : {
-            New : NewClient
+            New : NewClient,
+            View : ViewClient,
         }
     }
 

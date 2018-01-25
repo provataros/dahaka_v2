@@ -55,7 +55,7 @@ class Template extends React.Component {
             sections : [],
             data : {
 
-            }
+            },
         }
     }
     componentWillReceiveProps(props){
@@ -66,7 +66,9 @@ class Template extends React.Component {
         });
         var f = {
             sections : props.template.state,
-            values : x
+            values : x,
+            id : props.client._id,
+            data : props.client
         }
         this.setState(f);
     }
@@ -190,7 +192,6 @@ class Template extends React.Component {
         });
         return (
             <React.Fragment>
-                {this.state.id?(<Redirect to={"/clients/"+this.state.id} id={this.state.id}/>):null}
                 <Button raised color="secondary" onClick={this.saveData}>   
                     Save
                 </Button>
