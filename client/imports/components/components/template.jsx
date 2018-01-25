@@ -36,14 +36,10 @@ class SidePanel extends React.Component{
         this.state  = {
         }
         this.handleClick = this.handleClick.bind(this);
-        this.goBack = this.goBack.bind(this);
     }
     handleClick(){
         this.state.open = !this.state.open;
         this.setState(this.state);
-    }
-    goBack(){
-        console.log(this.props);
     }
     render(){
         return (
@@ -90,6 +86,10 @@ export default class App extends React.Component{
         };
         this.toggleSidePanel = this.toggleSidePanel.bind(this);
         this.close = this.close.bind(this);
+        this.goBack = this.goBack.bind(this);
+    }
+    goBack(){
+        this.props.history.goBack();
     }
     toggleSidePanel(){
         this.state.panel = true;

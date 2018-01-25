@@ -206,6 +206,7 @@ export default Wrapper = withTracker((props) => {
     
     const handle1 = Meteor.subscribe('LOVs');
     const handle2 = Meteor.subscribe('Templates');
+    console.log(props);
     const handle3 = {
         ready(){
             return true;

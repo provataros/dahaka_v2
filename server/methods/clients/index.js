@@ -14,7 +14,7 @@ Meteor.methods({
         var _id = state._id;
         delete state._id;
         return Clients.upsert({
-            _id : state.id
+            _id : _id
         },state)
     }
 });

@@ -19,9 +19,7 @@ export default class App extends React.Component{
             <MuiThemeProvider theme={theme}>
                 <Reboot />
                 <BrowserRouter history={ browserHistory }>
-                    <Template>
-                        <Routes/>
-                    </Template>
+                    <Routes/>
                 </BrowserRouter>
             </MuiThemeProvider>
         )

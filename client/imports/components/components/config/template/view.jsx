@@ -204,7 +204,6 @@ class Template extends React.Component {
 }
 
 export default Wrapper = withTracker((props) => {
-    
     const handle1 = Meteor.subscribe('LOVs');
     const handle2 = Meteor.subscribe('Templates');
     const handle3 = {
@@ -218,6 +217,7 @@ export default Wrapper = withTracker((props) => {
         ready : handle1.ready() && handle3.ready() && handle2.ready(),
         values : LOV.find({}).fetch(),
         template : Templates.findOne({}),
-        client : Clients.findOne({_id : props.match.params.id})
+        client : Clients.findOne({_id : props.match.params.id}),
+        id : props.match.params.id
     };
 })(Template);

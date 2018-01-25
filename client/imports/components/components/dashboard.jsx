@@ -47,7 +47,7 @@ class Dashboard extends React.Component {
 export default Wrapper = withTracker((props) => {
     
   const handle1 = Meteor.subscribe('Clients');
-  
+  console.log(props);
   return {
       ready : handle1.ready(),
       clients : Clients.find({}).fetch(),

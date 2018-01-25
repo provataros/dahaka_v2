@@ -26,7 +26,7 @@ var item_style = {
     borderRadius : "4px",
     backgroundColor : "lightgray",
     cursor : "pointer",
-    marginRight : "15px"
+    margin : "0px 15px 15px 0px"
 }
 
 
@@ -47,7 +47,7 @@ class ListLovs extends React.Component {
         var that = this;
         var items = this.state.items.map(function(d,i){
             return (
-                <Button key={"."+i} style={{textTransform : "none",marginRight : "15px"}} raised color="primary" component={Link} to = {"/configuration/lov/"+d._id}>
+                <Button key={"."+i} style={{textTransform : "none",margin : "0px 15px 15px 0px"}} raised color="primary" component={Link} to = {"/configuration/lov/"+d._id}>
                     {d.name?d.name.content:""}
                 </Button>
             )

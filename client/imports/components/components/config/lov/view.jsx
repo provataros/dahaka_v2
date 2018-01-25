@@ -53,7 +53,7 @@ var header_style = {
 var parent_style = {
     display : "inline-block",
     textAlign : "left",
-    minWidth : "500px",
+    width : "100%",
     padding : "25px",
     boxSizing : "border-box"
 }
@@ -127,7 +127,6 @@ class NewLov extends React.Component {
     render() {
         var that = this;
         var items = this.state.items.map(function(d,i){
-            console.log(d,i);
             return (
                 <div key={"."+(i)}>
                     <TextField fullWidth defaultValue = {d.content?d.content:""} placeholder="Enter a value" style={input_style} onChange={function(e){that.handleChange(i,e.target.value)}}/>

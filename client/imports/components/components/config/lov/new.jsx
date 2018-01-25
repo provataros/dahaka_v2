@@ -41,7 +41,7 @@ var input_style = {
 var parent_style = {
     display : "inline-block",
     textAlign : "left",
-    minWidth : "500px",
+    width : "100%",
     padding : "25px",
     boxSizing : "border-box"
 }
