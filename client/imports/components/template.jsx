@@ -48,6 +48,71 @@ class SidePanel extends React.Component{
                     <MenuIcon/>
                 </IconButton>
                 <List>
+                    {null/*commented*/}
+                </List>
+            </Drawer>
+        )
+    }
+}
+
+export default class App extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            panel : false,
+            actions : []
+        };
+        this.toggleSidePanel = this.toggleSidePanel.bind(this);
+        this.close = this.close.bind(this);
+        this.goBack = this.goBack.bind(this);
+        this.addActions = this.addActions.bind(this);
+    }
+    goBack(){
+        this.props.history.goBack();
+    }
+    toggleSidePanel(){
+        this.state.panel = true;
+        this.setState(this.state);
+    }
+    close(){
+        this.state.panel = false;
+        this.setState(this.state);
+    }
+    addActions(actions){
+        this.setState({actions : actions})
+    }
+    render(){
+        var actions = this.props.actions?this.props.actions.map(function(d,i){
+            return null;//React.cloneElement(d,{key : i})
+        }):[];
+        console.log(this.props.children);
+        this.props.children.props.test = "TESTING";
+        return (
+            <React.Fragment>
+                <AppBar position="static" style={{flexFlow : "row",justifyContent : "space-between"}}>
+                    <div style = {{flexFlow : "row"}}>
+                        <IconButton style={{color : "white"}} component="span" color="default" onClick={this.toggleSidePanel}>
+                            <MenuIcon/>
+                        </IconButton>
+                        <IconButton style={{color : "white"}} component="span" color="default" onClick={this.goBack}>
+                            <BackSpace/>
+                        </IconButton>
+                    </div>
+                    <div style = {{flexFlow : "row"}}>
+                        {this.state.actions}
+                    </div>
+                </AppBar>
+                <SidePanel open={this.state.panel} onClose={this.close}/>
+                <div style={{padding : "25px"}}>
+                    {React.cloneElement(this.props.children,{addActions : this.addActions})}
+                </div>
+            </React.Fragment>
+        )
+    }
+}
+
+/*
+
                     <ListItem button component={Link} to="/" onClick={this.props.onClose}> 
                         <ListItemIcon>
                             <HomeIcon />
@@ -72,51 +137,5 @@ class SidePanel extends React.Component{
                             </ListItem>
                         </List>
                     </Collapse>
-                </List>
-            </Drawer>
-        )
-    }
-}
 
-export default class App extends React.Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            panel : false
-        };
-        this.toggleSidePanel = this.toggleSidePanel.bind(this);
-        this.close = this.close.bind(this);
-        this.goBack = this.goBack.bind(this);
-    }
-    goBack(){
-        this.props.history.goBack();
-    }
-    toggleSidePanel(){
-        this.state.panel = true;
-        this.setState(this.state);
-    }
-    close(){
-        this.state.panel = false;
-        this.setState(this.state);
-    }
-    render(){
-        return (
-            <React.Fragment>
-                <AppBar position="static" style={{flexFlow : "row"}}>
-                        <IconButton style={{color : "white"}} component="span" color="default" onClick={this.toggleSidePanel}>
-                            <MenuIcon/>
-                        </IconButton>
-                        <IconButton style={{color : "white"}} component="span" color="default" onClick={this.goBack}>
-                            <BackSpace/>
-                        </IconButton>
-                </AppBar>
-                <SidePanel open={this.state.panel} onClose={this.close}>
-                    {this.props.children}
-                </SidePanel>
-                <div style={{padding : "25px"}}>
-                    {this.props.children}
-                </div>
-            </React.Fragment>
-        )
-    }
-}
+                    */

@@ -134,7 +134,7 @@ class NewLov extends React.Component {
             )
         })
         return (
-            <div style={{textAlign : "center"}}>
+            <div style={{textAlign : "center",maxWidth : "400px",width : "100%"}}>
                 <div style={parent_style}>
                     <TextField fullWidth placeholder="List of Values Name" InputProps={{style : {fontSize : "26px"}}}  onChange={this.changeName} value={this.state.name?this.state.name.content:""}/>
                         <h3>Values</h3>

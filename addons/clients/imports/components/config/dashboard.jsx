@@ -11,6 +11,8 @@ import {Clients} from "/imports/collections";
 import { withTracker } from 'meteor/react-meteor-data';
 
 import AvatarIcon from "material-ui-icons/AccountCircle"
+import IconButton  from "material-ui/IconButton"
+import SettingsIcon from 'material-ui-icons/Settings';
 
 class Dashboard extends React.Component {
   constructor(props){
@@ -18,10 +20,26 @@ class Dashboard extends React.Component {
     this.state = {
       data : []
     }
+    this.internal = this.internal.bind(this);
+
+
+    this.props.addActions([
+      <React.Fragment key={1} >
+        <IconButton style={{color : "white"}} component="span" color="default" onClick={this.internal}>
+            <SettingsIcon/>
+        </IconButton>
+        <IconButton style={{color : "white"}} component="span" color="default" onClick={this.internal}>
+            <SettingsIcon/>
+        </IconButton>
+      </React.Fragment>
+    ]);
   }
   componentWillReceiveProps(props){
     this.state.data = props.clients;
     this.setState(this.state);
+  }
+  internal(){
+    Meteor.call("oracle");
   }
   render() {
     return (
@@ -42,6 +60,7 @@ class Dashboard extends React.Component {
       </React.Fragment>
     );
   }
+  actions = "Asdsad"
 }
 
 export default Wrapper = withTracker((props) => {

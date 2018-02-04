@@ -8,6 +8,8 @@ import Drawer from "material-ui/Drawer"
 
 import Routes from "/client/routes";
 import Reboot from 'material-ui/Reboot';
+
+
 import Template from "./template.jsx";
 
 import theme from "/client/imports/themes/default"
@@ -15,11 +17,12 @@ import theme from "/client/imports/themes/default"
 
 export default class App extends React.Component{
     render(){
+        console.log(this.props);
         return (
             <MuiThemeProvider theme={theme}>
                 <Reboot />
                 <BrowserRouter history={ browserHistory }>
-                    <Routes/>
+                    <Routes routes={this.props.addons.routes}/>
                 </BrowserRouter>
             </MuiThemeProvider>
         )
