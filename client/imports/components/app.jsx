@@ -17,7 +17,6 @@ import theme from "/client/imports/themes/default"
 
 export default class App extends React.Component{
     render(){
-        console.log(this.props);
         return (
             <MuiThemeProvider theme={theme}>
                 <Reboot />

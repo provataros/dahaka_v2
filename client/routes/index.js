@@ -8,7 +8,6 @@ import {Template} from "/client/imports/components";
 class RouteWithLayout extends React.Component {
     constructor(props){
         super(props);
-        console.log(props);
     }
     render(){
 
@@ -16,10 +15,34 @@ class RouteWithLayout extends React.Component {
         var Layout = this.props.layout || Template;
         return (
             <Route {...this.props} render={(props) => 
-            (<Layout {...props} actions = {that.props.actions}>{that.props.page?(<that.props.page {...props}/>):null}</Layout>)
+            (<Layout {...props} menu = {that.props.menu}>{that.props.page?(<that.props.page {...props}/>):null}</Layout>)
             }/>
         )
     }
+}
+
+function addToMenu(menu,m){
+    var segments = m.path.split("/");
+
+    var current = menu;
+    segments.map(function(d,i){
+        if (!current[d]){
+            if (i==segments.length-1){
+                current[d] = {
+                    name : d,
+                    url : m.url,
+                    icon : m.icon
+                }
+            }
+            else{
+                    current[d] = {
+                    name : d,
+                    icon : m.icon
+                }
+            }
+        }
+        current = current[d];
+    })
 }
 
 export default class Routes extends React.Component {
@@ -37,9 +60,12 @@ export default class Routes extends React.Component {
                 <RouteWithLayout page={Views.NotFound} />
             </React.Fragment>
         );*/
-        console.log(this.props);
+        var menus = {}
         var routes = this.props.routes.map(function(d,i){
-            return (<RouteWithLayout key={i} exact path={d.path} page={d.view} actions={d.actions}/>)
+            if (d.menu){
+                addToMenu(menus,d.menu);
+            }
+            return (<RouteWithLayout key={i} exact path={d.path} page={d.view} actions={d.actions} menu={menus}/>)
         })
         return (
             <Switch>
